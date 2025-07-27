@@ -399,10 +399,10 @@ if __name__ == "__main__":
     # Example: Get bot detection scores from web log files
     web_logs_dir = os.path.join(dataset_base, 'D1/data/web_logs')
     for subfolder in ['humans', 'bots']:
-    subfolder_path = os.path.join(web_logs_dir, subfolder)
-    if os.path.exists(subfolder_path):
-      for log_file in os.listdir(subfolder_path):
-        if log_file.endswith('.log'):
-          log_path = os.path.join(subfolder_path, log_file)
-          scores = detector_d1.get_web_log_score(log_path)
-          print(f"Bot detection scores for {log_file}: {scores}")
+      subfolder_path = os.path.join(web_logs_dir, subfolder)
+        if os.path.exists(subfolder_path):
+          for log_file in os.listdir(subfolder_path):
+            if log_file.endswith('.log'):
+              log_path = os.path.join(subfolder_path, log_file)
+              scores = detector_d1.get_web_log_score(log_path)
+              print(f"Bot detection scores for {log_file}: {scores}")
