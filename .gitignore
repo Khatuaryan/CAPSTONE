@@ -67,3 +67,4 @@ venv.bak/
 
 # VS Code settings (optional, but common)
 .vscode/
+.env
