@@ -69,19 +69,13 @@ class WebLogDetectionBot:
             # Adaboost parameters for D2
             dt_base = DecisionTreeClassifier(criterion='gini', max_depth=None, max_features=None, splitter='best')
             ada = AdaBoostClassifier(estimator=dt_base, n_estimators=1250, learning_rate=1.0)
+        
         else:
             raise ValueError(f"Unknown dataset type: {self.dataset_type}. Use 'D1' or 'D2'.")
         
         # Create the voting classifier ensemble
         self.model = VotingClassifier(
-            estimators=[
-                ('svc', svc),
-                ('mlp', mlp),
-                ('rf', rf),
-                ('ada', ada)
-            ],
-            voting='soft'  # Use probability estimates for voting
-        )
+            estimators=[('svc', svc), ('mlp', mlp), ('rf', rf), ('ada', ada)], voting='soft')  # Use probability estimates for voting
         
         # Define the selected features based on SFFS algorithm results
         # These would be determined by your feature selection process
@@ -390,23 +384,25 @@ if __name__ == "__main__":
     detector_d1 = WebLogDetectionBot(dataset_type='D1')
     
     # Initialize the bot detector for dataset D2 (humans vs advanced bots)
-    detector_d2 = WebLogDetectionBot(dataset_type='D2')
+    '''detector_d2 = WebLogDetectionBot(dataset_type='D2')'''
     
     # Example: Load training data for D1
-    # train_annotations_d1 = os.path.join(dataset_base, 'D1/annotations/humans_and_moderate_bots/train')
-    # test_annotations_d1 = os.path.join(dataset_base, 'D1/annotations/humans_and_moderate_bots/test')
+    train_annotations_d1 = os.path.join(dataset_base, 'D1/annotations/humans_and_moderate_bots/train')
+    test_annotations_d1 = os.path.join(dataset_base, 'D1/annotations/humans_and_moderate_bots/test')
     
     # Example: Load training data for D2
-    # train_annotations_d2 = os.path.join(dataset_base, 'D2/annotations/humans_and_moderate_bots/train')
-    # test_annotations_d2 = os.path.join(dataset_base, 'D2/annotations/humans_and_moderate_bots/test')
-    
+    '''
+    train_annotations_d2 = os.path.join(dataset_base, 'D2/annotations/humans_and_moderate_bots/train')
+    test_annotations_d2 = os.path.join(dataset_base, 'D2/annotations/humans_and_moderate_bots/test')
+    '''
+
     # Example: Get bot detection scores from web log files
-    # web_logs_dir = os.path.join(dataset_base, 'D1/data/web_logs')
-    # for subfolder in ['humans', 'bots']:
-    #     subfolder_path = os.path.join(web_logs_dir, subfolder)
-    #     if os.path.exists(subfolder_path):
-    #         for log_file in os.listdir(subfolder_path):
-    #             if log_file.endswith('.log'):
-    #                 log_path = os.path.join(subfolder_path, log_file)
-    #         scores = detector_d1.get_web_log_score(log_path)
-    #         print(f"Bot detection scores for {log_file}: {scores}")
+    web_logs_dir = os.path.join(dataset_base, 'D1/data/web_logs')
+    for subfolder in ['humans', 'bots']:
+    subfolder_path = os.path.join(web_logs_dir, subfolder)
+    if os.path.exists(subfolder_path):
+      for log_file in os.listdir(subfolder_path):
+        if log_file.endswith('.log'):
+          log_path = os.path.join(subfolder_path, log_file)
+          scores = detector_d1.get_web_log_score(log_path)
+          print(f"Bot detection scores for {log_file}: {scores}")
