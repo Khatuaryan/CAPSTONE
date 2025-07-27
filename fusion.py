@@ -229,6 +229,7 @@ if __name__ == "__main__":
     )
     
     # Initialize the fusion module for D2 (humans vs advanced bots)
+    '''
     fusion_d2 = BotDetectionFusion(
         dataset_type='D2',  # Use D2 dataset parameters for web log detection
         thres_high=0.7,
@@ -236,16 +237,7 @@ if __name__ == "__main__":
         weight_mv=0.5,
         weight_wl=0.5
     )
-    
-    # Example: Process a single session for D1
-    # web_logs_dir = os.path.join(dataset_base, 'data/web_logs')
-    # mouse_data_dir = os.path.join(dataset_base, 'data/mouse_movements')
-    # web_log_files = [f for f in os.listdir(web_logs_dir) if f.endswith('.txt')]
-    # if web_log_files:
-    #     web_log_path = os.path.join(web_logs_dir, web_log_files[0])
-    #     session_id = 'example_session_id'
-    #     result = fusion_d1.process_session(session_id, web_log_path, mouse_data_dir)
-    #     print(f"Session {session_id}: {result}")
+    '''
     
     # Example: Evaluate D1 dataset (humans vs moderate bots)
     ground_truth_d1 = os.path.join(dataset_base, 'D1/annotations/humans_and_moderate_bots/test')
@@ -256,9 +248,11 @@ if __name__ == "__main__":
     print(f"Human - Precision: {evaluation_d1['metrics']['human']['precision']:.3f}, Recall: {evaluation_d1['metrics']['human']['recall']:.3f}, F-score: {evaluation_d1['metrics']['human']['f_score']:.3f}")
     
     # Example: Evaluate D2 dataset (humans vs advanced bots)
-    # ground_truth_d2 = os.path.join(dataset_base, 'D2/annotations/humans_and_moderate_bots/test')
-    # evaluation_d2 = fusion_d2.evaluate_dataset(dataset_base, phase='phase1', ground_truth_path=ground_truth_d2)
-    # print("\nD2 Results:")
-    # print(f"Accuracy: {evaluation_d2['metrics']['accuracy']:.3f}")
-    # print(f"Bot - Precision: {evaluation_d2['metrics']['bot']['precision']:.3f}, Recall: {evaluation_d2['metrics']['bot']['recall']:.3f}, F-score: {evaluation_d2['metrics']['bot']['f_score']:.3f}")
-    # print(f"Human - Precision: {evaluation_d2['metrics']['human']['precision']:.3f}, Recall: {evaluation_d2['metrics']['human']['recall']:.3f}, F-score: {evaluation_d2['metrics']['human']['f_score']:.3f}")
+    '''
+    ground_truth_d2 = os.path.join(dataset_base, 'D2/annotations/humans_and_moderate_bots/test')
+    evaluation_d2 = fusion_d2.evaluate_dataset(dataset_base, phase='phase1', ground_truth_path=ground_truth_d2)
+    print("\nD2 Results:")
+    print(f"Accuracy: {evaluation_d2['metrics']['accuracy']:.3f}")
+    print(f"Bot - Precision: {evaluation_d2['metrics']['bot']['precision']:.3f}, Recall: {evaluation_d2['metrics']['bot']['recall']:.3f}, F-score: {evaluation_d2['metrics']['bot']['f_score']:.3f}")
+    print(f"Human - Precision: {evaluation_d2['metrics']['human']['precision']:.3f}, Recall: {evaluation_d2['metrics']['human']['recall']:.3f}, F-score: {evaluation_d2['metrics']['human']['f_score']:.3f}")
+    '''
