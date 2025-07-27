@@ -58,14 +58,7 @@ class WebBotDetectionTrainer:
         Returns:
             dict: session_id -> label mapping
         """
-        if dataset_type == 'D1':
-            folder = 'humans_and_moderate_bots'
-        elif dataset_type == 'D2':
-            folder = 'humans_and_advanced_bots'
-        else:
-            raise ValueError(f"Unknown dataset type: {dataset_type}")
-        
-        annotations_path = os.path.join(self.dataset_base, 'annotations', folder, split)
+        annotations_path = os.path.join(self.dataset_base, dataset_type, 'annotations', 'humans_and_moderate_bots', split)
         annotations = {}
         
         if os.path.exists(annotations_path):
@@ -90,14 +83,7 @@ class WebBotDetectionTrainer:
         Returns:
             list: List of session IDs
         """
-        if dataset_type == 'D1':
-            folder = 'humans_and_moderate_bots'
-        elif dataset_type == 'D2':
-            folder = 'humans_and_advanced_bots'
-        else:
-            raise ValueError(f"Unknown dataset type: {dataset_type}")
-        
-        mouse_dir = os.path.join(self.dataset_base, 'data', 'mouse_movements', folder)
+        mouse_dir = os.path.join(self.dataset_base, dataset_type, 'data', 'mouse_movements', 'humans_and_moderate_bots')
         sessions = []
         
         if os.path.exists(mouse_dir):
@@ -124,7 +110,6 @@ class WebBotDetectionTrainer:
             tuple: (features_df, labels, session_ids)
         """
         mouse_detector = MouseMovementDetectionBot()
-        mouse_data_dir = os.path.join(self.dataset_base, 'data', 'mouse_movements')
         
         features = []
         labels = []
@@ -137,7 +122,7 @@ class WebBotDetectionTrainer:
                 try:
                     # Get mouse movement score
                     score_mv = mouse_detector.process_session_data(
-                        session_id, mouse_data_dir, 'phase1', dataset_type
+                        session_id, self.dataset_base, 'phase1', dataset_type
                     )
                     
                     # For now, we'll use a dummy web log score since web logs are not available

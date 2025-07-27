@@ -393,17 +393,20 @@ if __name__ == "__main__":
     detector_d2 = WebLogDetectionBot(dataset_type='D2')
     
     # Example: Load training data for D1
-    # train_annotations_d1 = os.path.join(dataset_base, 'annotations/humans_and_moderate_bots/train')
-    # test_annotations_d1 = os.path.join(dataset_base, 'annotations/humans_and_moderate_bots/test')
+    # train_annotations_d1 = os.path.join(dataset_base, 'D1/annotations/humans_and_moderate_bots/train')
+    # test_annotations_d1 = os.path.join(dataset_base, 'D1/annotations/humans_and_moderate_bots/test')
     
     # Example: Load training data for D2
-    # train_annotations_d2 = os.path.join(dataset_base, 'annotations/humans_and_advanced_bots/train')
-    # test_annotations_d2 = os.path.join(dataset_base, 'annotations/humans_and_advanced_bots/test')
+    # train_annotations_d2 = os.path.join(dataset_base, 'D2/annotations/humans_and_moderate_bots/train')
+    # test_annotations_d2 = os.path.join(dataset_base, 'D2/annotations/humans_and_moderate_bots/test')
     
     # Example: Get bot detection scores from web log files
-    # web_logs_dir = os.path.join(dataset_base, 'data/web_logs')
-    # for log_file in os.listdir(web_logs_dir):
-    #     if log_file.endswith('.txt'):
-    #         log_path = os.path.join(web_logs_dir, log_file)
+    # web_logs_dir = os.path.join(dataset_base, 'D1/data/web_logs')
+    # for subfolder in ['humans', 'bots']:
+    #     subfolder_path = os.path.join(web_logs_dir, subfolder)
+    #     if os.path.exists(subfolder_path):
+    #         for log_file in os.listdir(subfolder_path):
+    #             if log_file.endswith('.log'):
+    #                 log_path = os.path.join(subfolder_path, log_file)
     #         scores = detector_d1.get_web_log_score(log_path)
     #         print(f"Bot detection scores for {log_file}: {scores}")

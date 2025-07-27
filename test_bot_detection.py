@@ -67,7 +67,7 @@ def test_with_sample_session():
     dataset_base = '/Users/khatuaryan/Desktop/Aryan/Studies/Projects/CAPSTONE/dataset/phase1'
     
     # Check for available sessions in D1
-    d1_mouse_dir = os.path.join(dataset_base, 'data/mouse_movements/humans_and_moderate_bots')
+    d1_mouse_dir = os.path.join(dataset_base, 'D1/data/mouse_movements/humans_and_moderate_bots')
     if os.path.exists(d1_mouse_dir):
         sessions = [d for d in os.listdir(d1_mouse_dir) if os.path.isdir(os.path.join(d1_mouse_dir, d))]
         if sessions:
@@ -77,20 +77,27 @@ def test_with_sample_session():
             # Test mouse movement detection
             try:
                 mouse_detector = MouseMovementDetectionBot()
-                mouse_data_dir = os.path.join(dataset_base, 'data/mouse_movements')
-                score = mouse_detector.process_session_data(sample_session, mouse_data_dir, 'phase1', 'D1')
+                score = mouse_detector.process_session_data(sample_session, dataset_base, 'phase1', 'D1')
                 print(f"Mouse movement score for {sample_session}: {score:.3f}")
             except Exception as e:
                 print(f"Error processing mouse movement data: {e}")
             
             # Test web log detection (if web logs are available)
-            web_logs_dir = os.path.join(dataset_base, 'data/web_logs')
+            web_logs_dir = os.path.join(dataset_base, 'D1/data/web_logs')
             if os.path.exists(web_logs_dir):
-                web_log_files = [f for f in os.listdir(web_logs_dir) if f.endswith('.txt')]
+                # Check for log files in both humans and bots folders
+                web_log_files = []
+                for subfolder in ['humans', 'bots']:
+                    subfolder_path = os.path.join(web_logs_dir, subfolder)
+                    if os.path.exists(subfolder_path):
+                        for f in os.listdir(subfolder_path):
+                            if f.endswith('.log'):
+                                web_log_files.append(os.path.join(subfolder_path, f))
+                
                 if web_log_files:
                     try:
                         web_detector = WebLogDetectionBot(dataset_type='D1')
-                        web_log_path = os.path.join(web_logs_dir, web_log_files[0])
+                        web_log_path = web_log_files[0]
                         web_scores = web_detector.get_web_log_score(web_log_path)
                         if sample_session in web_scores:
                             print(f"Web log score for {sample_session}: {web_scores[sample_session]:.3f}")
@@ -103,8 +110,8 @@ def test_with_sample_session():
             try:
                 fusion = BotDetectionFusion(dataset_type='D1')
                 if web_log_files:
-                    web_log_path = os.path.join(web_logs_dir, web_log_files[0])
-                    result = fusion.process_session(sample_session, web_log_path, mouse_data_dir, 'phase1')
+                    web_log_path = web_log_files[0]
+                    result = fusion.process_session(sample_session, web_log_path, dataset_base, 'phase1')
                     print(f"Fusion result for {sample_session}:")
                     print(f"  - Mouse score: {result['score_mv']:.3f}")
                     print(f"  - Web log score: {result['score_wl']:.3f}")
@@ -128,7 +135,7 @@ def show_dataset_info():
         return
     
     # Check annotations
-    annotations_dir = os.path.join(dataset_base, 'annotations')
+    annotations_dir = os.path.join(dataset_base, 'D1/annotations')
     if os.path.exists(annotations_dir):
         print("Available annotation sets:")
         for subdir in os.listdir(annotations_dir):
@@ -143,7 +150,7 @@ def show_dataset_info():
                             print(f"    - {file}: {len(lines)} sessions")
     
     # Check mouse movement data
-    mouse_dir = os.path.join(dataset_base, 'data/mouse_movements')
+    mouse_dir = os.path.join(dataset_base, 'D1/data/mouse_movements')
     if os.path.exists(mouse_dir):
         print("\nMouse movement data:")
         for subdir in os.listdir(mouse_dir):
@@ -153,14 +160,16 @@ def show_dataset_info():
                 print(f"  - {subdir}: {len(sessions)} sessions")
     
     # Check web logs
-    web_logs_dir = os.path.join(dataset_base, 'data/web_logs')
+    web_logs_dir = os.path.join(dataset_base, 'D1/data/web_logs')
     if os.path.exists(web_logs_dir):
-        log_files = [f for f in os.listdir(web_logs_dir) if f.endswith('.txt')]
-        print(f"\nWeb log files: {len(log_files)} files")
-        for log_file in log_files[:5]:  # Show first 5
-            print(f"  - {log_file}")
-        if len(log_files) > 5:
-            print(f"  ... and {len(log_files) - 5} more")
+        print(f"\nWeb log structure:")
+        for subfolder in ['humans', 'bots']:
+            subfolder_path = os.path.join(web_logs_dir, subfolder)
+            if os.path.exists(subfolder_path):
+                log_files = [f for f in os.listdir(subfolder_path) if f.endswith('.log')]
+                print(f"  - {subfolder}: {len(log_files)} log files")
+                for log_file in log_files:
+                    print(f"    - {log_file}")
 
 def main():
     """Main test function"""
