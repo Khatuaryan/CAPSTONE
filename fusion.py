@@ -151,7 +151,9 @@ class BotDetectionFusion:
                 web_log_path = None
                 if os.path.exists(web_logs_dir):
                     # Check both human and bot log files
-                    human_log = os.path.join(web_logs_dir, 'humans', 'access_humans.log')
+                  for i in range(1, 6):  # access_1.log to access_5.log
+                    log_file = f'access_{i}.log'
+                    human_log = os.path.join(human_logs_dir, log_file)
                     bot_log = os.path.join(web_logs_dir, 'bots', 'access_moderate_bots.log')
                     
                     # Try to find the session in both log files
