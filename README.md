@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Comprehensive Bot Detection System
 
 This project implements a robust bot detection system based on the research paper's approach, combining web log analysis and mouse movement patterns with intelligent fusion for enhanced detection accuracy.
