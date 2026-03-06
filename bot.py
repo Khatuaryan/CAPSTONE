@@ -5,34 +5,6 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-<<<<<<< HEAD
-import os # Import os module to handle file paths
-from selenium.webdriver.chrome.service import Service
-
-class HumanoidBot:
-    def __init__(self, driver_path='chromedriver'):
-        """
-        Initializes the Selenium WebDriver.
-        Args:
-            driver_path (str): Path to your WebDriver executable (e.g., 'chromedriver').
-        """
-        options = webdriver.ChromeOptions()
-        # Optional: Add some options to make it less detectable (though not foolproof)
-        options.add_argument('--disable-blink-features=AutomationControlled')
-        options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
-        options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        options.add_experimental_option('useAutomationExtension', False)
-        # options.add_argument('--start-maximized') # Maximize window
-        # Use Service object for driver path (Selenium 4+)
-        service = Service(driver_path)
-        self.driver = webdriver.Chrome(service=service, options=options)
-        self.actions = ActionChains(self.driver)
-        print("Bot initialized.")
-
-    def visit_local_page(self, html_file_name):
-        """Navigates to the specified local HTML file."""
-        # Get the absolute path to the HTML file
-=======
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.edge.service import Service as EdgeService
@@ -129,19 +101,10 @@ class HumanoidBot:
     def visit_local_file(self, html_file_name):
         """Navigates to the specified local HTML file (kept for backward compatibility)."""
         import os
->>>>>>> master
         file_path = os.path.abspath(html_file_name).replace("\\", "/")
         url = f"file:///{file_path}"
         print(f"Visiting local file: {url}")
         self.driver.get(url)
-<<<<<<< HEAD
-        self.human_like_delay(2, 4) # Initial delay to load page
-
-    def human_like_delay(self, min_seconds, max_seconds):
-        """Introduces a random delay to simulate human pauses."""
-        delay = random.uniform(min_seconds, max_seconds)
-        print(f"Pausing for {delay:.2f} seconds...")
-=======
         self.human_like_delay(2, 4)
 
     def visit_url(self, url):
@@ -170,7 +133,6 @@ class HumanoidBot:
             else:
                 delay = base_delay
                 print(f"Pausing for {delay:.2f} seconds...")
->>>>>>> master
         time.sleep(delay)
 
     def move_to_element_human_like(self, element, steps=50, max_offset=5):
@@ -190,20 +152,10 @@ class HumanoidBot:
             target_y = element_location['y'] + element_size['height'] / 2
 
             # Get current mouse position (approximate, Selenium doesn't expose it directly)
-<<<<<<< HEAD
-            # We'll assume the starting point is the center of the viewport for more realistic movement
-            # This is still an approximation, but better than (0,0)
-            current_x = self.driver.execute_script("return window.innerWidth / 2;")
-            current_y = self.driver.execute_script("return window.innerHeight / 2;")
-
-            # If it's the very first move, or you want to ensure it starts from somewhere
-            # you can move to an initial random point first.
-=======
             current_x = self.driver.execute_script("return window.innerWidth / 2;")
             current_y = self.driver.execute_script("return window.innerHeight / 2;")
 
             # If it's the very first move, initialize position tracking
->>>>>>> master
             if not hasattr(self, '_last_mouse_pos'):
                 self.actions.move_by_offset(current_x, current_y).perform()
                 self._last_mouse_pos = {'x': current_x, 'y': current_y}
@@ -211,10 +163,6 @@ class HumanoidBot:
                 current_x = self._last_mouse_pos['x']
                 current_y = self._last_mouse_pos['y']
 
-<<<<<<< HEAD
-
-=======
->>>>>>> master
             # Calculate total distance for each axis
             dx = target_x - current_x
             dy = target_y - current_y
@@ -230,37 +178,21 @@ class HumanoidBot:
 
                 # Move to the calculated point with offset
                 self.actions.move_by_offset(inter_x - current_x + offset_x, inter_y - current_y + offset_y).perform()
-<<<<<<< HEAD
-                self.human_like_delay(0.01, 0.05) # Small delays between micro-movements
-=======
                 self.human_like_delay(0.01, 0.05)  # Small delays between micro-movements
->>>>>>> master
 
                 # Update current position for the next step calculation
                 current_x = inter_x + offset_x
                 current_y = inter_y + offset_y
 
-<<<<<<< HEAD
-            self._last_mouse_pos = {'x': current_x, 'y': current_y} # Store last position
-            print("Mouse movement complete.")
-        except Exception as e:
-            print(f"Error during human-like mouse movement: {e}")
-            self.actions.move_to_element(element).perform() # Fallback to direct move
-=======
             self._last_mouse_pos = {'x': current_x, 'y': current_y}  # Store last position
             print("Mouse movement complete.")
         except Exception as e:
             print(f"Error during human-like mouse movement: {e}")
             self.actions.move_to_element(element).perform()  # Fallback to direct move
->>>>>>> master
             # If fallback, update the last known position to the element's center
             self._last_mouse_pos = {'x': element_location['x'] + element_size['width'] / 2,
                                     'y': element_location['y'] + element_size['height'] / 2}
 
-<<<<<<< HEAD
-
-=======
->>>>>>> master
     def click_element_human_like(self, element, offset_range=5):
         """
         Clicks an element with a slight, random offset to simulate human imprecision.
@@ -270,11 +202,7 @@ class HumanoidBot:
         """
         print(f"Attempting human-like click on element: {element.tag_name} with ID: {element.get_attribute('id')}...")
         try:
-<<<<<<< HEAD
-            # First, move to the element (can reuse human_like_move)
-=======
             # First, move to the element
->>>>>>> master
             self.move_to_element_human_like(element)
 
             # Introduce a slight delay before clicking
@@ -285,20 +213,13 @@ class HumanoidBot:
             height = element.size['height']
 
             # Calculate a random offset relative to the center of the element
-<<<<<<< HEAD
-            # Ensure the offset keeps the click within the element's bounds
-=======
->>>>>>> master
             offset_x = random.uniform(-min(offset_range, width/2 - 1), min(offset_range, width/2 - 1))
             offset_y = random.uniform(-min(offset_range, height/2 - 1), min(offset_range, height/2 - 1))
 
             # Move to the element's center and then apply the offset relative to its center
             self.actions.move_to_element(element).move_by_offset(offset_x, offset_y).click().perform()
             print(f"Clicked with offset ({offset_x:.2f}, {offset_y:.2f}).")
-<<<<<<< HEAD
-=======
             
->>>>>>> master
             # Update last known mouse position after click
             element_location = element.location
             element_size = element.size
@@ -307,22 +228,14 @@ class HumanoidBot:
 
         except Exception as e:
             print(f"Error during human-like click: {e}")
-<<<<<<< HEAD
-            self.actions.click(element).perform() # Fallback to direct click
-=======
             self.actions.click(element).perform()  # Fallback to direct click
->>>>>>> master
             # Update last known mouse position after fallback click
             element_location = element.location
             element_size = element.size
             self._last_mouse_pos = {'x': element_location['x'] + element_size['width'] / 2,
                                     'y': element_location['y'] + element_size['height'] / 2}
 
-<<<<<<< HEAD
-        self.human_like_delay(0.5, 1.5) # Delay after click
-=======
         self.human_like_delay(0.5, 1.5)  # Delay after click
->>>>>>> master
 
     def scroll_human_like(self, pixels_to_scroll, scroll_steps=10):
         """
@@ -335,11 +248,7 @@ class HumanoidBot:
         pixels_per_step = pixels_to_scroll / scroll_steps
         for _ in range(scroll_steps):
             self.driver.execute_script(f"window.scrollBy(0, {pixels_per_step});")
-<<<<<<< HEAD
-            self.human_like_delay(0.05, 0.2) # Small delay between scroll steps
-=======
             self.human_like_delay(0.05, 0.2)  # Small delay between scroll steps
->>>>>>> master
         print("Scroll complete.")
 
     def type_human_like(self, element, text):
@@ -352,11 +261,7 @@ class HumanoidBot:
         print(f"Typing human-like into element: {element.tag_name} with ID: {element.get_attribute('id')}...")
         for char in text:
             element.send_keys(char)
-<<<<<<< HEAD
-            self.human_like_delay(0.05, 0.2) # Delay between keystrokes
-=======
             self.human_like_delay(0.05, 0.2)  # Delay between keystrokes
->>>>>>> master
         print("Typing complete.")
 
     def get_collected_data(self):
@@ -368,8 +273,6 @@ class HumanoidBot:
             print(f"Could not retrieve output data: {e}")
             return "No data collected or output element not found."
 
-<<<<<<< HEAD
-=======
     def wait_for_element(self, by, value, timeout=10):
         """
         Waits for an element to be present and returns it.
@@ -404,7 +307,6 @@ class HumanoidBot:
             print(f"Clickable element not found within {timeout} seconds: {e}")
             return None
 
->>>>>>> master
     def close(self):
         """Closes the browser."""
         print("Closing bot.")
@@ -412,33 +314,6 @@ class HumanoidBot:
 
 # --- Example Usage ---
 if __name__ == "__main__":
-<<<<<<< HEAD
-    bot = HumanoidBot(driver_path='chromedriver.exe')
-
-    try:
-        # Visit the local HTML file
-        bot.visit_local_page("test.html")
-
-        # Interact with the elements
-        target_area = WebDriverWait(bot.driver, 10).until(
-            EC.presence_of_element_located((By.ID, "targetArea"))
-        )
-        bot.click_element_human_like(target_area)
-        bot.human_like_delay(1, 2)
-
-        action_button = WebDriverWait(bot.driver, 10).until(
-            EC.element_to_be_clickable((By.ID, "actionButton"))
-        )
-        bot.click_element_human_like(action_button)
-        bot.human_like_delay(1, 2)
-
-        text_field = WebDriverWait(bot.driver, 10).until(
-            EC.presence_of_element_located((By.ID, "textField"))
-        )
-        bot.type_human_like(text_field, "This is a test message from the bot.")
-        bot.human_like_delay(1, 2)
-
-=======
     # You can now choose different browsers:
     # bot = HumanoidBot(browser='chrome')    # Default
     # bot = HumanoidBot(browser='firefox')
@@ -473,7 +348,6 @@ if __name__ == "__main__":
             bot.human_like_delay(1, 2)
 
         # Scroll with random amount
->>>>>>> master
         bot.scroll_human_like(random.randint(100, 300))
         bot.human_like_delay(1, 2)
 
@@ -483,18 +357,10 @@ if __name__ == "__main__":
         print(collected_data)
         print("--------------------------------------")
 
-<<<<<<< HEAD
-        bot.human_like_delay(3, 5) # Final delay to observe results
-=======
         bot.human_like_delay(3, 5)  # Final delay to observe results
->>>>>>> master
 
     except Exception as e:
         print(f"An error occurred during bot execution: {e}")
     finally:
-<<<<<<< HEAD
-        bot.close()
-=======
         bot.close()
 
->>>>>>> master
