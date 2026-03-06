@@ -1,10 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-<<<<<<< HEAD
-=======
 import { spawn } from 'child_process';
->>>>>>> master
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,10 +12,7 @@ const WEB_LOGS_PATH = path.join(LOGS_DIR, 'web_logs.json');
 const MOUSE_MOVEMENTS_PATH = path.join(LOGS_DIR, 'mouse_movements.json');
 const LOGIN_ATTEMPTS_PATH = path.join(LOGS_DIR, 'login_attempts.json');
 const EVENTS_PATH = path.join(LOGS_DIR, 'events.json');
-<<<<<<< HEAD
-=======
 const BEHAVIOR_PATH = path.join(LOGS_DIR, 'behavior.json');
->>>>>>> master
 
 // Helper function to read JSON file safely
 async function readJsonFile(filePath) {
@@ -50,8 +44,6 @@ async function writeJsonFile(filePath, data) {
   }
 }
 
-<<<<<<< HEAD
-=======
 // Function to automatically run ML detection when suspicious data is detected
 async function runMLDetection(sessionId) {
   try {
@@ -59,9 +51,29 @@ async function runMLDetection(sessionId) {
     
     const PYTHON_SCRIPT_PATH = path.join(__dirname, '..', '..', '..', 'src', 'core', 'optimized_bot_detection.py');
     
+    // Determine the correct Python executable path (same logic as botDetection.js)
+    const projectRoot = path.join(__dirname, '..', '..', '..');
+    const venvPythonPath = path.join(projectRoot, '.venv', 'bin', 'python');
+    const systemPythonPath = 'python3'; // Fallback to system python3
+    
+    // Try virtual environment Python first, then fallback to system python3
+    let pythonCommand;
+    try {
+      if (fs.existsSync(venvPythonPath)) {
+        pythonCommand = venvPythonPath;
+        console.log('Using virtual environment Python for ML detection:', pythonCommand);
+      } else {
+        pythonCommand = systemPythonPath;
+        console.log('Using system Python for ML detection:', pythonCommand);
+      }
+    } catch (error) {
+      pythonCommand = systemPythonPath;
+      console.log('Fallback to system Python for ML detection:', pythonCommand);
+    }
+    
     return new Promise((resolve, reject) => {
-      const pythonProcess = spawn('python', [PYTHON_SCRIPT_PATH], {
-        cwd: path.join(__dirname, '..', '..', '..'),
+      const pythonProcess = spawn(pythonCommand, [PYTHON_SCRIPT_PATH], {
+        cwd: projectRoot,
         stdio: ['pipe', 'pipe', 'pipe'],
         env: { ...process.env, PYTHONIOENCODING: 'utf-8' }
       });
@@ -98,7 +110,6 @@ async function runMLDetection(sessionId) {
   }
 }
 
->>>>>>> master
 async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
@@ -113,10 +124,7 @@ async function handler(req, res) {
     const data = req.body;
     let updateSuccess = true;
     let eventsUpdated = false;
-<<<<<<< HEAD
-=======
     let behaviorUpdated = false;
->>>>>>> master
     let events = { mouseMovements: [], webLogs: [], sessionStats: null };
     
     // Handle session statistics if provided
@@ -197,10 +205,6 @@ async function handler(req, res) {
       // Update events object with mouse movements
       events.mouseMovements = currentSessionMovements;
       eventsUpdated = true;
-<<<<<<< HEAD
-    }
-    
-=======
       
       // Check if this looks like suspicious bot behavior and trigger ML detection
       const movements = data.mouseMovements.movements || [];
@@ -225,7 +229,6 @@ async function handler(req, res) {
       behaviorUpdated = true;
     }
 
->>>>>>> master
     // Handle login attempts
     if (data.eventType === 'login_attempt') {
       // Get current session ID
@@ -260,8 +263,6 @@ async function handler(req, res) {
       // Write only the current session attempts back to the file
       const success = await writeJsonFile(LOGIN_ATTEMPTS_PATH, currentSessionAttempts);
       if (!success) updateSuccess = false;
-<<<<<<< HEAD
-=======
       
       // Trigger ML detection for login attempts
       console.log(`🔐 Login attempt detected for session: ${currentSessionId}`);
@@ -270,7 +271,6 @@ async function handler(req, res) {
       runMLDetection(currentSessionId).catch(error => {
         console.error('❌ Background ML detection failed:', error);
       });
->>>>>>> master
     }
     
     // Write updated events to events.json if any changes were made
