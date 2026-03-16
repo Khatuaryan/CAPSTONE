@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-import LoginPage from './components/LoginPage'
-
-function App() {
-  return (
-    <>
-      <LoginPage />
-    </>
-  )
-}
-
-export default App
-=======
 import React, { useState } from 'react';
 import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
@@ -41,4 +28,3 @@ function App() {
 }
 
 export default App;
->>>>>>> master

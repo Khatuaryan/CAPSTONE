@@ -9,11 +9,6 @@ import {
   Link,
   Fade,
   InputAdornment,
-<<<<<<< HEAD
-  IconButton
-} from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-=======
   IconButton,
   Alert
 } from '@mui/material';
@@ -30,7 +25,6 @@ import {
   combineRecaptchaWithML,
   isRecaptchaReady
 } from '../utils/recaptcha';
->>>>>>> master
 
 
 
@@ -252,11 +246,7 @@ const modernTheme = createTheme({
   },
 });
 
-<<<<<<< HEAD
-const LoginPage = () => {
-=======
 const LoginPage = ({ onLoginSuccess }) => {
->>>>>>> master
   const [formData, setFormData] = useState({
     aadhaarNumber: '',
     honeypotField: '',
@@ -265,8 +255,6 @@ const LoginPage = ({ onLoginSuccess }) => {
   const [mouseMovements, setMouseMovements] = useState([]);
   const [sessionId] = useState(() => Math.random().toString(36).substring(2, 15));
   const [loginAttempts, setLoginAttempts] = useState([]);
-<<<<<<< HEAD
-=======
   const [botDetectionResults, setBotDetectionResults] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -294,7 +282,6 @@ const LoginPage = ({ onLoginSuccess }) => {
     scrollDeltas: [],
     focusBlurCount: 0
   });
->>>>>>> master
 
   useEffect(() => {
     // Track mouse movements
@@ -306,8 +293,6 @@ const LoginPage = ({ onLoginSuccess }) => {
     return () => document.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-<<<<<<< HEAD
-=======
   // Initialize reCAPTCHA on component mount
   useEffect(() => {
     const initializeRecaptcha = async () => {
@@ -342,7 +327,6 @@ const LoginPage = ({ onLoginSuccess }) => {
     }
   }, [formData.aadhaarNumber, botDetectionResults, isAnalyzing]);
 
->>>>>>> master
   // Track and save mouse movements periodically
   useEffect(() => {
     // Only set up the interval if we have a valid sessionId
@@ -365,8 +349,6 @@ const LoginPage = ({ onLoginSuccess }) => {
       }
     };
   }, [sessionId]); // Only depend on sessionId, not mouseMovements
-<<<<<<< HEAD
-=======
 
   // Capture additional behavioral signals for ML (keystrokes, clicks, focus/blur, scroll)
   useEffect(() => {
@@ -446,7 +428,6 @@ const LoginPage = ({ onLoginSuccess }) => {
       window.removeEventListener('blur', handleBlur, true);
     };
   }, [sessionId]);
->>>>>>> master
   
   // Function to save mouse movements to server
   const saveMouseMovements = () => {
@@ -479,10 +460,6 @@ const LoginPage = ({ onLoginSuccess }) => {
     });
   };
 
-<<<<<<< HEAD
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-=======
   const validateAadhaar = (aadhaarNumber) => {
     const errors = {};
     
@@ -510,14 +487,11 @@ const LoginPage = ({ onLoginSuccess }) => {
       console.log('🍯 HONEYPOT FIELD CHANGED:', { name, value, timestamp: new Date().toISOString() });
     }
     
->>>>>>> master
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
 
-<<<<<<< HEAD
-=======
     // Clear validation errors when user types
     if (validationErrors[name]) {
       setValidationErrors(prev => ({
@@ -536,7 +510,6 @@ const LoginPage = ({ onLoginSuccess }) => {
       });
     }
 
->>>>>>> master
     // Log input events
     logEvent('input_change', { field: name });
   };
@@ -594,41 +567,6 @@ const LoginPage = ({ onLoginSuccess }) => {
     });
   };
 
-<<<<<<< HEAD
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Check for honeypot
-    if (formData.honeypotField) {
-      logEvent('honeypot_triggered', { value: formData.honeypotField });
-      return;
-    }
-
-    // Validate Aadhaar number (basic validation - 12 digits)
-    const isValidAadhaar = /^\d{12}$/.test(formData.aadhaarNumber.replace(/\s/g, ''));
-    const isLoginSuccessful = isValidAadhaar;
-
-    // Log login attempt
-    const attemptData = {
-      timestamp: new Date().toISOString(),
-      aadhaarNumber: formData.aadhaarNumber.replace(/\d(?=\d{4})/g, '*'), // Mask Aadhaar number for privacy
-      mouseMovements: mouseMovements.length,
-      success: isLoginSuccessful
-    };
-
-    setLoginAttempts(prev => [...prev, attemptData]);
-    
-    // Save mouse movements before logging the login attempt
-    if (mouseMovements.length > 0) {
-      saveMouseMovements();
-    }
-    
-    // Log the login attempt with sessionId
-    logEvent('login_attempt', attemptData, 'login_attempt', sessionId);
-
-    if (isLoginSuccessful) {
-      setLoginSuccess(true);
-=======
   const generateCaptcha = () => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
@@ -733,10 +671,14 @@ const LoginPage = ({ onLoginSuccess }) => {
     const startTime = Date.now();
     
     try {
-      // Prepare request body with reCAPTCHA token
+      // Prepare request body with reCAPTCHA token and honeypot data
       const requestBody = { 
         sessionId,
-        recaptchaToken: recaptchaToken || null
+        recaptchaToken: recaptchaToken || null,
+        honeypotData: {
+          isTriggered: !!formData.honeypotField,
+          value: formData.honeypotField || ''
+        }
       };
 
       const response = await fetch('/api/bot-detection', {
@@ -956,7 +898,6 @@ const LoginPage = ({ onLoginSuccess }) => {
     } finally {
       setIsSubmitting(false);
       setIsValidating(false);
->>>>>>> master
     }
   };
 
@@ -998,110 +939,6 @@ const LoginPage = ({ onLoginSuccess }) => {
             padding: 3
           }}
         >
-<<<<<<< HEAD
-          {loginSuccess ? (
-            <Paper
-              elevation={8}
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                width: '100%',
-                maxWidth: '400px',
-                padding: 4,
-                textAlign: 'center'
-              }}
-            >
-                {/* Success Content */}
-                <Box sx={{ width: '100%', textAlign: 'center' }}>
-                  <Fade in={true} timeout={500}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                      <Box 
-                        sx={{ 
-                          width: 80, 
-                          height: 80, 
-                          borderRadius: '50%', 
-                          bgcolor: '#10b981',
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center',
-                          color: '#ffffff',
-                          fontSize: '2.5rem',
-                          mb: 4,
-                          boxShadow: '0 8px 32px rgba(16, 185, 129, 0.3)',
-                        }}
-                      >
-                        ✓
-                      </Box>
-                      
-                      <Typography 
-                        variant="h4" 
-                        sx={{ 
-                          mb: 2,
-                          color: '#10b981',
-                          fontWeight: 600,
-                          fontFamily: '"Poppins", "Inter", sans-serif',
-                          letterSpacing: '-0.015em',
-                        }}
-                      >
-                        Login Successful
-                      </Typography>
-                      
-                      <Typography 
-                        variant="body1" 
-                        sx={{ 
-                          mb: 4,
-                          color: '#cbd5e1',
-                          fontFamily: '"Inter", sans-serif',
-                          fontSize: '1.1rem',
-                          lineHeight: 1.6,
-                          fontWeight: 400,
-                        }}
-                      >
-                        You have successfully authenticated with your Aadhaar credentials.
-                      </Typography>
-                      
-                      <Box sx={{ width: '100%', mt: 1 }}>
-                        <Button
-                          variant="contained"
-                          fullWidth
-                          size="large"
-                          sx={{ 
-                            mb: 3,
-                            py: 1.5,
-                            backgroundColor: '#10b981',
-                            color: '#ffffff',
-                            '&:hover': {
-                              backgroundColor: '#059669',
-                              boxShadow: '0 6px 20px rgba(16, 185, 129, 0.4)',
-                            }
-                          }}
-                          onClick={() => window.location.href = "#dashboard"}
-                        >
-                          Continue to Dashboard
-                        </Button>
-                        
-                        <Button
-                          variant="text"
-                          sx={{
-                            color: '#cbd5e1',
-                            '&:hover': {
-                              backgroundColor: 'rgba(203, 213, 225, 0.1)',
-                              color: '#f8fafc'
-                            }
-                          }}
-                          onClick={() => setLoginSuccess(false)}
-                        >
-                          Sign Out
-                        </Button>
-                      </Box>
-                    </Box>
-                  </Fade>
-                </Box>
-            </Paper>
-          ) : (
-=======
->>>>>>> master
             <Paper
               elevation={8}
               sx={{
@@ -1147,11 +984,8 @@ const LoginPage = ({ onLoginSuccess }) => {
                     autoFocus
                     value={formData.aadhaarNumber}
                     onChange={handleInputChange}
-<<<<<<< HEAD
-=======
                     error={!!validationErrors.aadhaarNumber}
                     helperText={validationErrors.aadhaarNumber || ''}
->>>>>>> master
                     sx={{ mb: 3 }}
                     InputProps={{
                       endAdornment: (
@@ -1164,8 +998,6 @@ const LoginPage = ({ onLoginSuccess }) => {
                     }}
                   />
                   
-<<<<<<< HEAD
-=======
                   {/* General validation error */}
                   {validationErrors.general && (
                     <Alert severity="error" sx={{ mb: 2 }}>
@@ -1193,7 +1025,6 @@ const LoginPage = ({ onLoginSuccess }) => {
                     </Alert>
                   )}
                   
->>>>>>> master
                   {/* Honeypot field - hidden from regular users */}
                   <input
                     type="text"
@@ -1210,10 +1041,7 @@ const LoginPage = ({ onLoginSuccess }) => {
                     fullWidth
                     variant="contained"
                     size="large"
-<<<<<<< HEAD
-=======
                     disabled={isAnalyzing || isSubmitting || isValidating || !formData.aadhaarNumber.trim()}
->>>>>>> master
                     sx={{ 
                       mt: 2, 
                       mb: 3,
@@ -1222,14 +1050,6 @@ const LoginPage = ({ onLoginSuccess }) => {
                       color: '#ffffff',
                       '&:hover': {
                         background: 'linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)',
-<<<<<<< HEAD
-                      }
-                    }}
-                  >
-                    Sign In
-                  </Button>
-                  
-=======
                       },
                       '&:disabled': {
                         background: 'rgba(99, 102, 255, 0.5)',
@@ -1309,7 +1129,6 @@ const LoginPage = ({ onLoginSuccess }) => {
                     </Typography>
                   )}
                   
->>>>>>> master
                   <Box sx={{ textAlign: 'center', mt: 2 }}>
                     <Link 
                       href="#" 
@@ -1332,9 +1151,6 @@ const LoginPage = ({ onLoginSuccess }) => {
                 </Box>
               </Box>
 
-<<<<<<< HEAD
-
-=======
               {/* ML Analysis Progress Indicator */}
               {isAnalyzing && (
                 <Box sx={{ width: '100%', mt: 4 }}>
@@ -1557,7 +1373,6 @@ const LoginPage = ({ onLoginSuccess }) => {
                   </Paper>
                 </Box>
               )}
->>>>>>> master
               
               <Typography 
                 variant="body2" 
@@ -1571,14 +1386,6 @@ const LoginPage = ({ onLoginSuccess }) => {
                   letterSpacing: '0.02em',
                 }}
               >
-<<<<<<< HEAD
-                © 2024 Unique Identification Authority of India
-              </Typography>
-            </Paper>
-          )}
-        </Container>
-      </Box>
-=======
                               © 2024 Unique Identification Authority of India
             </Typography>
           </Paper>
@@ -1773,7 +1580,6 @@ const LoginPage = ({ onLoginSuccess }) => {
           difficulty={captchaDifficulty}
         />
       )}
->>>>>>> master
     </ThemeProvider>
   );
 };
